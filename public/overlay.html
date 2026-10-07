@@ -17,7 +17,104 @@ font-family:Arial,sans-serif
 .scorebar{
 position:absolute;
 top:4%;
+left:3%;<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Overlay</title>
+<script src="/socket.io/socket.io.js"></script>
+<style>
+html,body{
+margin:0;
+width:100%;
+height:100%;
+background:transparent;
+overflow:hidden;
+font-family:Arial,sans-serif
+}
+.scorebar{
+position:absolute;
+top:4%;
 left:3%;
+display:flex;
+align-items:stretch;
+background:rgba(190,190,190,.92);
+border-radius:9px;
+overflow:hidden;
+font-weight:bold
+}
+.team{
+display:flex;
+align-items:center;
+padding:8px 13px;
+min-width:130px;
+gap:10px
+}
+.name{
+font-size:20px;
+white-space:nowrap;
+color:#fff
+}
+.score{
+font-size:28px;
+margin-left:auto;
+color:#fff
+}
+.time{
+padding:8px 13px;
+background:rgba(100,100,100,.35);
+font-size:25px;
+min-width:75px;
+text-align:center;
+color:#fff
+}
+</style>
+</head>
+<body>
+
+<div class="scorebar">
+<div class="team" id="h">
+<span class="name"></span>
+<span class="score"></span>
+</div>
+
+<div class="time" id="t">00:00</div>
+
+<div class="team" id="a">
+<span class="name"></span>
+<span class="score"></span>
+</div>
+</div>
+
+<script>
+const socket=io();
+
+const h=document.getElementById('h');
+const a=document.getElementById('a');
+const t=document.getElementById('t');
+
+socket.on('state',s=>{
+h.style.backgroundColor=s.home.color;
+h.querySelector('.name').textContent=s.home.name;
+h.querySelector('.score').textContent=s.home.score;
+
+a.style.backgroundColor=s.away.color;
+a.querySelector('.name').textContent=s.away.name;
+a.querySelector('.score').textContent=s.away.score;
+
+t.textContent=fmt(s.elapsed);
+});
+
+function fmt(n){
+n=Math.max(0,Math.floor(n));
+return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0');
+}
+</script>
+
+</body>
+</html>
+
 display:flex;
 align-items:stretch;
 background:rgba(190,190,190,.92);
